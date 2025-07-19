@@ -762,20 +762,21 @@ def main():
 
 if __name__ == "__main__":
     main()
-    import os
+
+import os
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
 
 class KeepAliveHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(b"Bot is running.")
+        self.wfile.write(b'Bot is running!')
 
-def run_http_server():
-    port = int(os.environ.get("PORT", 10000))  # ⚠️ Utilise le port donné par Render
-    server = HTTPServer(("0.0.0.0", port), KeepAliveHandler)  # ⚠️ Ecoute sur 0.0.0.0
+def run_keep_alive_server():
+    port = int(os.environ.get("PORT", 10000))
+    print(f"🎯 Serveur HTTP lancé sur le port {port}")
+    server = HTTPServer(("0.0.0.0", port), KeepAliveHandler)
     server.serve_forever()
 
-# Démarre le serveur HTTP en parallèle du bot
-threading.Thread(target=run_http_server).start()
+threading.Thread(target=run_keep_alive_server).start()
