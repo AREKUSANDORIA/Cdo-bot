@@ -1,6 +1,5 @@
 import logging
 from telegram import Update, InputMediaPhoto, InlineKeyboardButton, InlineKeyboardMarkup
-from flask import Flask
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -8,6 +7,11 @@ from telegram.ext import (
     CallbackQueryHandler,
 )
 import asyncio
+from flask import Flask
+import threading
+import os
+
+app = Flask(__name__)
 
 # Configure logging
 logging.basicConfig(
@@ -759,27 +763,18 @@ def main():
     application.add_handler(CommandHandler("deleteEvent", deleteEvent))
     application.add_handler(CommandHandler("show", show))
 
-    application.run_polling()
-
-if __name__ == "__main__":
-    main()
-    
-from flask import Flask
-
-# Serveur Flask pour Render (port dynamique)
-from flask import Flask
-app = Flask(name)
-
-@app.route('/')
+    @app.route('/')
 def home():
     return "Bot Telegram actif via Render ✅"
 
 def run_flask():
-    import os
     port = int(os.environ.get("PORT", 8000))
     app.run(host="0.0.0.0", port=port)
+    
+    def run_bot():
+    application.run_polling()
 
-def run_bot():
-    bot.infinity_polling()
-
-
+if __name__ == "__main__":
+    threading.Thread(target=run_flask).start()
+    run_bot()
+    
