@@ -1,5 +1,6 @@
 import logging
 from telegram import Update, InputMediaPhoto, InlineKeyboardButton, InlineKeyboardMarkup
+from flask import Flask
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -762,21 +763,23 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+from flask import Flask
 
-import os
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import threading
+# Serveur Flask pour Render (port dynamique)
+from flask import Flask
+app = Flask(name)
 
-class KeepAliveHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b'Bot is running!')
+@app.route('/')
+def home():
+    return "Bot Telegram actif via Render ✅"
 
-def run_keep_alive_server():
-    port = int(os.environ.get("PORT", 10000))
-    print(f"🎯 Serveur HTTP lancé sur le port {port}")
-    server = HTTPServer(("0.0.0.0", port), KeepAliveHandler)
-    server.serve_forever()
+def run_flask():
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host="0.0.0.0", port=port)
 
-threading.Thread(target=run_keep_alive_server).start()
+def run_bot():
+    bot.infinity_polling()
+
+
